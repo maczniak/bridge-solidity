@@ -2,7 +2,7 @@
 pragma solidity >=0.6.11;
 
 // ============ Internal Imports ============
-import {UpgradeBeacon} from "./UpgradeBeacon1.sol";
+// import {UpgradeBeacon} from "./UpgradeBeacon.sol";
 // ============ External Imports ============
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";

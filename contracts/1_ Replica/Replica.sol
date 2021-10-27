@@ -9,6 +9,7 @@ import {Message} from "../libs/Message.sol";
 import {IMessageRecipient} from "../interfaces/IMessageRecipient.sol";
 // ============ External Imports ============
 import {TypedMemView} from "@summa-tx/memview-sol/contracts/TypedMemView.sol";
+import { ECDSA } from "@openzeppelin/contracts/cryptography/ECDSA.sol";
 
 /**
  * @title Replica
@@ -23,6 +24,7 @@ contract Replica is Version0, Common {
     using TypedMemView for bytes;
     using TypedMemView for bytes29;
     using Message for bytes29;
+    using ECDSA for bytes32;
 
     // ============ Enums ============
 
@@ -154,6 +156,44 @@ contract Replica is Version0, Common {
         require(prove(keccak256(_message), _proof, _index), "!prove");
         process(_message);
     }
+
+    // meta-tx version of proveAndProcess
+
+    modifier ensure(uint256 _deadline) {
+        require(_deadline >= block.timestamp);
+        _;
+    }
+    
+    mapping(bytes32 => bool) private usedSigs;
+
+    function _verify(
+        address _signer,
+        bytes memory _sig,
+        bytes memory encodeWithSelector
+    ) private returns (bool) {
+        bytes32 _hash = keccak256(encodeWithSelector);
+        require(!usedSigs[_hash], "used tx");
+        require(_hash.toEthSignedMessageHash().recover(_sig) == _signer);
+        usedSigs[_hash] = true;
+        return true;
+    }
+
+    function proveAndProcess2(
+        bytes memory _message,
+        bytes32[32] calldata _proof,
+        uint256 _index,
+        uint256 _deadline,
+        address _signer,
+        bytes memory _sig
+    ) external ensure(_deadline) {
+        // "6188af0e": "proveAndProcess(bytes,bytes32[32],uint256)",
+        bytes memory selector = abi.encodeWithSignature("proveAndProcess(bytes,bytes32[32],uint256)", _message, _proof, _index);
+        require(_verify(_signer, _sig, selector), "!meta-tx");
+        require(prove(keccak256(_message), _proof, _index), "!prove");
+        process(_message);
+    }
+    
+    // meta-tx version of proveAndProcess
 
     /**
      * @notice Given formatted message, attempts to dispatch
