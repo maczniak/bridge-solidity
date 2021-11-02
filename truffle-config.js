@@ -95,7 +95,7 @@ module.exports = {
       provider: () => setupWallet(`https://ropsten.infura.io/v3/${json.project_id}`),
       network_id: 0x3,
       from: json.from,
-      gas: 3 * 1000000,
+      gas: 8 * 1000000,
       gasPrice: utils.toWei('8', 'gwei')
     },
   },
