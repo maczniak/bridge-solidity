@@ -19,5 +19,4 @@ module.exports = async function(deployer) {
   await deployer.deploy(UpgradeBeacon, BridgeRouter.address, UpgradeBeaconController.address); // _initialImplementation (address): Replica.address, _controller (address): UpgradeBeaconController.address
   const _initializationCalldata2 = "0x485cc955000000000000000000000000c494bfee14b5e1e118f93cfedf831f40dfa720fa000000000000000000000000cec158a719d11005bd9339865965bed938beafa3";
   await deployer.deploy(UpgradeBeaconProxy, UpgradeBeacon.address, _initializationCalldata2); // _localDomain: UpgradeBeacon.address, _initializationCalldata (bytes)
-
 };
