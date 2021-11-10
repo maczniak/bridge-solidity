@@ -2,8 +2,8 @@
 pragma solidity >=0.6.11;
 
 // ============ Internal Imports ============
-import {Version0} from "./Version0.sol";
-import {Common} from "./Common.sol";
+import {Version0} from "../libs/Version0.sol";
+import {Common} from "../libs/Common.sol";
 import {MerkleLib} from "../libs/Merkle.sol";
 import {Message} from "../libs/Message.sol";
 import {IMessageRecipient} from "../interfaces/IMessageRecipient.sol";
