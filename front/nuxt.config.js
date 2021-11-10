@@ -49,7 +49,9 @@ export default {
   build: {
   },
 
-  buildDir: '../docs',
+  generate: {
+    dir: '../docs'
+  },  
   router: {
     base: '/bridge-solidity'
   }
